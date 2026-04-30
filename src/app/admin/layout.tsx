@@ -24,7 +24,7 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   const router = useRouter()
-  const { data: session } = useSession()
+  const { data: session, isPending } = useSession()
   const [searchQuery, setSearchQuery] = useState("")
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
 
@@ -117,16 +117,31 @@ export default function AdminLayout({
           
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-              <div className="hidden md:flex flex-col items-end">
-                <span className="text-sm font-bold text-[#0F172A]">
-                  {session?.user?.name || "Loading..."}
-                </span>
-                <span className="text-xs text-slate-500 capitalize">
-                  {session?.user?.role || "Admin"}
-                </span>
+              <div className="hidden md:flex flex-col items-end min-w-[120px]">
+                {isPending ? (
+                  <>
+                    <div className="h-5 w-24 bg-slate-200 animate-pulse rounded mb-1"></div>
+                    <div className="h-4 w-12 bg-slate-200 animate-pulse rounded"></div>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-sm font-bold text-[#0F172A] truncate w-full text-right">
+                      {session?.user?.name || "Admin User"}
+                    </span>
+                    <span className="text-xs text-slate-500 capitalize">
+                      {session?.user?.role || "Admin"}
+                    </span>
+                  </>
+                )}
               </div>
-              <div className="h-9 w-9 rounded-full bg-[#E3F2FD] border border-[#bac9d3] flex items-center justify-center text-[#0053db] font-bold">
-                {session?.user?.name ? session.user.name.charAt(0).toUpperCase() : <User className="h-5 w-5" />}
+              <div className="h-9 w-9 shrink-0 rounded-full bg-[#E3F2FD] border border-[#bac9d3] flex items-center justify-center text-[#0053db] font-bold overflow-hidden">
+                {isPending ? (
+                  <div className="h-full w-full bg-slate-200 animate-pulse"></div>
+                ) : session?.user?.name ? (
+                  session.user.name.charAt(0).toUpperCase()
+                ) : (
+                  <User className="h-5 w-5" />
+                )}
               </div>
               <Dialog open={isLogoutModalOpen} onOpenChange={setIsLogoutModalOpen}>
                 <DialogTrigger asChild>

@@ -112,11 +112,14 @@ export function StopsClient({ initialData }: { initialData: any[] }) {
     
     setIsSubmitting(false)
 
-    if (!result.success) {
+    if (result && !result.success) {
       alert("Gagal menyimpan data: " + result.error)
-    } else {
+    } else if (result && result.success) {
       setIsDialogOpen(false)
       router.refresh()
+    } else {
+      alert("An unexpected error occurred. Please make sure the server is running.")
+      setIsDialogOpen(false)
     }
   }
 

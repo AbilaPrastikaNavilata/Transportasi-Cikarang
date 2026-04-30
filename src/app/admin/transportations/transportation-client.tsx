@@ -84,13 +84,19 @@ export function TransportationClient({ initialData }: { initialData: any[] }) {
     setIsSubmitting(true)
     const submitData = new FormData(e.currentTarget)
     
+    let result;
     if (editingId) {
-      await updateTransportation(editingId, submitData)
+      result = await updateTransportation(editingId, submitData)
     } else {
-      await createTransportation(submitData)
+      result = await createTransportation(submitData)
     }
     
     setIsSubmitting(false)
+    if (result && !result.success) {
+      alert("Error: " + result.error)
+      return
+    }
+
     setIsDialogOpen(false)
     router.refresh()
   }

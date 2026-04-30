@@ -107,11 +107,14 @@ export function RoutesClient({
     
     setIsSubmitting(false)
 
-    if (!result.success) {
+    if (result && !result.success) {
       alert("Error: " + result.error)
-    } else {
+    } else if (result && result.success) {
       setIsDialogOpen(false)
       router.refresh()
+    } else {
+      alert("An unexpected error occurred. Please make sure the server is running.")
+      setIsDialogOpen(false)
     }
   }
 
