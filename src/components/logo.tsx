@@ -32,9 +32,9 @@ export function Logo({ className = "", textSize = "text-2xl", iconSize = 28, lig
       
       {/* Modern Typography */}
       <span className={`${textSize} font-extrabold tracking-tight ${light ? "text-white" : "text-[#0F172A]"} flex items-center`}>
-        Cikarang
+        CAK
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0053db] to-emerald-400 ml-[1px]">
-          Go
+          RA
         </span>
       </span>
     </motion.div>

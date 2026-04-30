@@ -39,7 +39,7 @@ export default function LoginPage() {
       if (role === "admin" || role === "superadmin") {
         router.push("/admin")
       } else {
-        router.push("/user") // CikarangGo Main App
+        router.push("/user") // CAKRA Main App
       }
     } catch (err) {
       setIsLoading(false);

@@ -10,16 +10,16 @@ export default function Home() {
     <div className="min-h-screen bg-[#0F172A] flex flex-col relative font-sans">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div 
-          animate={{ 
+        <motion.div
+          animate={{
             rotate: [0, 360],
             scale: [1, 1.2, 1]
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#0053db]/20 blur-[120px]"
         />
-        <motion.div 
-          animate={{ 
+        <motion.div
+          animate={{
             rotate: [360, 0],
             scale: [1, 1.5, 1]
           }}
@@ -29,7 +29,7 @@ export default function Home() {
       </div>
 
       {/* Header */}
-      <motion.header 
+      <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -45,7 +45,7 @@ export default function Home() {
       {/* Hero Section */}
       <main className="flex-1 flex flex-col items-center p-6 text-center relative z-10 pt-20 md:pt-32">
         <div className="max-w-5xl mx-auto space-y-12 w-full">
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -56,20 +56,20 @@ export default function Home() {
               <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <span className="text-sm font-medium text-white/80">Platform Navigasi Transportasi #1 Cikarang</span>
             </div>
-            
+
             <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight">
               Jelajahi Cikarang <br className="hidden md:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0053db] to-emerald-400">
                 Tanpa Tersesat
               </span>
             </h1>
-            
+
             <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
               Temukan rute angkot terbaik, estimasi tarif akurat, dan jadwal operasional armada dalam satu platform pintar. Mulai perjalanan Anda sekarang.
             </p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
@@ -84,7 +84,7 @@ export default function Home() {
           </motion.div>
 
           {/* Fitur Section */}
-          <motion.div 
+          <motion.div
             id="fitur"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -93,17 +93,17 @@ export default function Home() {
             className="pt-32 scroll-mt-20"
           >
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6">Fitur Utama CikarangGo</h2>
+              <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6">Fitur Utama CAKRA</h2>
               <p className="text-white/60 text-lg max-w-2xl mx-auto">Kami menyediakan berbagai kemudahan untuk menemani perjalanan Anda mengelilingi kota industri terbesar di Asia Tenggara ini.</p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { icon: MapPin, title: "Rute Akurat", desc: "Navigasi titik ke titik dengan panduan angkot yang presisi." },
                 { icon: CreditCard, title: "Tarif Transparan", desc: "Ketahui estimasi biaya perjalanan Anda sebelum berangkat." },
                 { icon: Clock, title: "Jadwal Real-time", desc: "Pantau jam operasional setiap armada yang aktif." }
               ].map((feature, i) => (
-                <motion.div 
+                <motion.div
                   key={i}
                   whileHover={{ y: -10 }}
                   className="bg-white/5 backdrop-blur-md border border-white/10 rounded-[32px] p-10 text-left hover:bg-white/10 transition-colors"
@@ -129,7 +129,7 @@ export default function Home() {
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#0053db]/20 rounded-full blur-[80px] -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] -ml-32 -mb-32"></div>
-            
+
             <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
@@ -138,7 +138,7 @@ export default function Home() {
                 </div>
                 <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6">Misi Kami untuk <span className="text-emerald-400">Cikarang</span></h2>
                 <p className="text-white/60 text-lg leading-relaxed mb-6">
-                  CikarangGo lahir dari keresahan masyarakat tentang sulitnya mencari informasi rute transportasi umum di Cikarang. Kami percaya bahwa mobilitas yang mudah adalah hak semua orang.
+                  CAKRA (Cikarang Access for Kommuter Route and Area) lahir dari keresahan masyarakat tentang sulitnya mencari informasi rute transportasi umum di Cikarang. Kami percaya bahwa mobilitas yang mudah adalah hak semua orang.
                 </p>
                 <p className="text-white/60 text-lg leading-relaxed">
                   Dengan mengintegrasikan data angkot, bus, dan KRL dalam satu tempat, kami bermimpi menjadikan Cikarang kota yang lebih terkoneksi dan ramah bagi para penumpang transportasi publik.
@@ -170,7 +170,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-white/10 py-8 text-center text-white/40 text-sm mt-12">
-        <p>&copy; 2026 CikarangGo. Membantu Cikarang bergerak lebih maju.</p>
+        <p>&copy; 2026 CAKRA. Membantu Cikarang bergerak lebih maju.</p>
       </footer>
     </div>
   )

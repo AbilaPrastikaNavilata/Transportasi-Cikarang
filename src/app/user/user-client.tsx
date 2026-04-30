@@ -145,7 +145,7 @@ export function UserClient() {
                 </div>
                 <DialogTitle className="text-center text-xl font-bold text-[#0F172A]">Konfirmasi Keluar</DialogTitle>
                 <DialogDescription className="text-center text-slate-500">
-                  Apakah Anda yakin ingin keluar dari CikarangGo? Anda perlu masuk kembali jika ingin memesan atau melihat rute eksklusif.
+                  Apakah Anda yakin ingin keluar dari CAKRA? Anda perlu masuk kembali jika ingin memesan atau melihat rute eksklusif.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="flex sm:justify-center gap-2 mt-4 bg-transparent border-0 mx-0 mb-0">

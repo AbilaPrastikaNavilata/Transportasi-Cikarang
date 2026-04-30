@@ -144,7 +144,7 @@ export function StopsClient({ initialData }: { initialData: any[] }) {
               <DialogHeader>
                 <DialogTitle>Stops Map</DialogTitle>
                 <DialogDescription>
-                  Interactive map showing all stops and terminals in CikarangGo.
+                  Interactive map showing all stops and terminals in CAKRA.
                 </DialogDescription>
               </DialogHeader>
               <div className="py-2">

@@ -8,7 +8,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "CikarangGo - Navigasi Transportasi Cikarang",
+  title: "CAKRA - Cikarang Access for Kommuter Route and Area",
   description: "Cari rute angkot, bus, dan KRL terbaik di Cikarang.",
 };
 

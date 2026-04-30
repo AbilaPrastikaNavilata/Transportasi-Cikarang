@@ -1,4 +1,4 @@
-# Rencana Implementasi: Sistem Informasi Transportasi Cikarang (CikarangGo)
+# Rencana Implementasi: Sistem Informasi Transportasi Cikarang (CAKRA)
 
 ## 1. Arsitektur & Tech Stack
 *   **Framework:** Next.js (App Router)
