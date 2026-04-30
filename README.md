@@ -44,14 +44,6 @@ Jika kamu terbiasa dengan terminal/command prompt, jalankan perintah berikut:
 mysql -u root -p nama_database < "path/ke/file/database.sql"
 ```
 
-### Sinkronisasi Struktur Database (Drizzle ORM)
-Project ini menggunakan Drizzle ORM. Jika temanmu *tidak* memberikan file `.sql` melainkan hanya memberikan update kode struktur tabel di project, kamu bisa langsung membuat tabel-tabelnya secara otomatis ke database lokalmu dengan perintah:
-```bash
-npx drizzle-kit push
-```
-
----
-
 ## 🛠️ Teknologi yang Digunakan
 - **Next.js** (App Router)
 - **React**
