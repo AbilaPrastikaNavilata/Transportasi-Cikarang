@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CAKRA (Cikarang Access for Kommuter Route and Area)
 
-## Getting Started
+## 🚀 Cara Menjalankan Project Pertama Kali
 
-First, run the development server:
+Ikuti langkah-langkah berikut jika kamu baru pertama kali melakukan clone atau mengunduh project ini:
 
+1. **Install Dependencies**
+   Buka terminal di dalam folder project (folder `CAKRA`), lalu jalankan perintah berikut untuk mengunduh semua library yang dibutuhkan:
+   ```bash
+   npm install
+   ```
+
+2. **Siapkan Environment Variables**
+   Buat file bernama `.env` di folder utama project (sejajar dengan `package.json`). Kamu bisa bertanya kepada tim untuk isi dari `.env` ini, atau minta file `.env` langsung.
+   
+   Minimal file ini harus berisi URL koneksi ke database kamu:
+   ```env
+   DATABASE_URL="mysql://username:password@localhost:3306/nama_database"
+   ```
+
+3. **Jalankan Development Server**
+   Setelah semua library terinstall dan `.env` sudah siap, jalankan aplikasi di komputermu dengan perintah:
+   ```bash
+   npm run dev
+   ```
+   Buka [http://localhost:3000](http://localhost:3000) di browser untuk melihat website yang berjalan.
+
+---
+
+## 💾 Cara Memasukkan (Import) Database dari Orang Lain
+
+Project ini menggunakan **MySQL** dan **Drizzle ORM**. Jika kamu menerima file backup database (biasanya berformat `.sql`) dari anggota tim lain, berikut cara memasukkannya:
+
+### Opsi 1: Menggunakan Aplikasi (Disarankan: phpMyAdmin, DBeaver, TablePlus, XAMPP)
+1. Buka aplikasi database client kamu dan pastikan server MySQL sudah menyala (contoh: nyalakan module MySQL di XAMPP).
+2. Buat database kosong baru (misalnya dengan nama `cakra_db`).
+3. Cari menu **Import**, lalu pilih file `.sql` yang diberikan oleh temanmu.
+4. Klik **Go** atau **Run** untuk memulai proses import.
+5. Pastikan `DATABASE_URL` di file `.env` kamu sudah di-update sesuai dengan nama database, username, dan password MySQL di komputermu.
+
+### Opsi 2: Menggunakan Command Line (Terminal) MySQL
+Jika kamu terbiasa dengan terminal/command prompt, jalankan perintah berikut:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+mysql -u root -p nama_database < "path/ke/file/database.sql"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Sinkronisasi Struktur Database (Drizzle ORM)
+Project ini menggunakan Drizzle ORM. Jika temanmu *tidak* memberikan file `.sql` melainkan hanya memberikan update kode struktur tabel di project, kamu bisa langsung membuat tabel-tabelnya secara otomatis ke database lokalmu dengan perintah:
+```bash
+npx drizzle-kit push
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Teknologi yang Digunakan
+- **Next.js** (App Router)
+- **React**
+- **Tailwind CSS**
+- **Drizzle ORM** (MySQL)
+- **Better Auth**
+- **Leaflet** (Maps)
