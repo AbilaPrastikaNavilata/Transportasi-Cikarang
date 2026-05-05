@@ -21,7 +21,8 @@ import {
   Edit,
   Trash2,
   ArrowRightLeft,
-  Loader2
+  Loader2,
+  AlertTriangle
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -57,6 +58,7 @@ export function RoutesClient({
     originStopId: "", 
     destinationStopId: "" 
   })
+  const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; id: number | null; name: string }>({ open: false, id: null, name: "" })
   const router = useRouter()
 
   const filteredData = initialRoutes.filter(item => 
@@ -64,10 +66,11 @@ export function RoutesClient({
     (item.transportation?.name || "").toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this route?")) return;
-    setIsDeleting(id)
-    await deleteRoute(id)
+  const handleDelete = async () => {
+    if (!deleteConfirm.id) return;
+    setIsDeleting(deleteConfirm.id)
+    setDeleteConfirm({ open: false, id: null, name: "" })
+    await deleteRoute(deleteConfirm.id)
     setIsDeleting(null)
     router.refresh()
   }
@@ -239,7 +242,7 @@ export function RoutesClient({
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow className="border-slate-100 hover:bg-slate-50">
-                <TableHead className="font-semibold text-slate-600">ID / Route Name</TableHead>
+                <TableHead className="font-semibold text-slate-600">Route Name</TableHead>
                 <TableHead className="font-semibold text-slate-600">Transport Fleet</TableHead>
                 <TableHead className="font-semibold text-slate-600">Path (Origin - Destination)</TableHead>
                 <TableHead className="text-right font-semibold text-slate-600">Actions</TableHead>
@@ -262,7 +265,6 @@ export function RoutesClient({
                       </div>
                       <div className="flex flex-col">
                         <span className="font-semibold text-[#0F172A]">{item.name}</span>
-                        <span className="text-xs text-slate-500">ID: {item.id}</span>
                       </div>
                     </div>
                   </TableCell>
@@ -292,7 +294,7 @@ export function RoutesClient({
                         variant="ghost" 
                         size="icon" 
                         className="h-8 w-8 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => setDeleteConfirm({ open: true, id: item.id, name: item.name })}
                         disabled={isDeleting === item.id}
                       >
                         {isDeleting === item.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
@@ -305,6 +307,30 @@ export function RoutesClient({
           </Table>
         </div>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteConfirm.open} onOpenChange={(open) => !open && setDeleteConfirm({ open: false, id: null, name: "" })}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="mx-auto w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mb-3">
+              <AlertTriangle className="h-7 w-7 text-red-600" />
+            </div>
+            <DialogTitle className="text-center text-xl font-bold text-[#0F172A]">Hapus Rute?</DialogTitle>
+            <DialogDescription className="text-center text-slate-500">
+              Anda akan menghapus rute <span className="font-semibold text-[#0F172A]">&ldquo;{deleteConfirm.name}&rdquo;</span>. Tindakan ini tidak dapat dibatalkan.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex sm:justify-center gap-3 mt-2">
+            <Button variant="outline" onClick={() => setDeleteConfirm({ open: false, id: null, name: "" })} className="rounded-xl flex-1">
+              Batal
+            </Button>
+            <Button onClick={handleDelete} className="rounded-xl flex-1 bg-red-600 hover:bg-red-700 text-white">
+              <Trash2 className="h-4 w-4 mr-2" />
+              Ya, Hapus
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

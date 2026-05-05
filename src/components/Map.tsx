@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
 
@@ -20,34 +20,55 @@ interface MapProps {
   stops: any[];
 }
 
+function MapUpdater({ stops }: { stops: any[] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (stops.length > 0) {
+      const validStops = stops.filter(s => !isNaN(parseFloat(s.latitude)) && !isNaN(parseFloat(s.longitude)));
+      if (validStops.length > 0) {
+        const bounds = L.latLngBounds(validStops.map(s => [parseFloat(s.latitude), parseFloat(s.longitude)]));
+        map.fitBounds(bounds, { padding: [50, 50] });
+      }
+    }
+  }, [stops, map]);
+  return null;
+}
+
 export default function Map({ stops }: MapProps) {
   // Default center Cikarang
   const defaultCenter: [number, number] = [-6.2615, 107.1444]
 
-  return (
-    <MapContainer
-      center={stops.length > 0 ? [parseFloat(stops[0].latitude), parseFloat(stops[0].longitude)] : defaultCenter}
-      zoom={13}
-      style={{ height: "400px", width: "100%", borderRadius: "0.5rem" }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      {stops.map((stop) => {
-        const lat = parseFloat(stop.latitude);
-        const lng = parseFloat(stop.longitude);
-        if (isNaN(lat) || isNaN(lng)) return null;
+  const validStops = stops.filter(s => s && !isNaN(parseFloat(s.latitude)) && !isNaN(parseFloat(s.longitude)));
+  const positions: [number, number][] = validStops.map(s => [parseFloat(s.latitude), parseFloat(s.longitude)]);
 
-        return (
-          <Marker key={stop.id} position={[lat, lng]} icon={customIcon}>
-            <Popup>
-              <strong>{stop.name}</strong><br />
-              {stop.type}
-            </Popup>
-          </Marker>
-        )
-      })}
-    </MapContainer>
+  return (
+    <div style={{ width: "100%", height: "100%", borderRadius: "0.5rem", overflow: "hidden" }}>
+      <MapContainer
+        center={positions.length > 0 ? positions[0] : defaultCenter}
+        zoom={13}
+        style={{ height: "100%", width: "100%", zIndex: 1 }}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <MapUpdater stops={validStops} />
+        
+        {positions.length >= 2 && (
+          <Polyline positions={positions} color="#0053db" weight={4} dashArray="10, 10" />
+        )}
+
+        {validStops.map((stop, i) => {
+          return (
+            <Marker key={stop.id || i} position={[parseFloat(stop.latitude), parseFloat(stop.longitude)]} icon={customIcon}>
+              <Popup>
+                <strong>{stop.name}</strong><br />
+                {stop.type}
+              </Popup>
+            </Marker>
+          )
+        })}
+      </MapContainer>
+    </div>
   )
 }

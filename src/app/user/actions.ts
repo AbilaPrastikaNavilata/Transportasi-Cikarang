@@ -2,23 +2,18 @@
 
 import { db } from "@/db"
 import { routes, stops, transportations, fares, schedules } from "@/db/schema"
-import { eq, like, or, and } from "drizzle-orm"
+import { eq, like, or, and, inArray, isNotNull } from "drizzle-orm"
 
 export async function searchRoutes(from: string, to: string) {
   try {
-    // Basic search logic: Find routes where origin matches "from" AND destination matches "to"
-    // Since names might not be exact, we use LIKE.
+    // Find stops matching 'from' and 'to' (by name or type)
+    const fromStops = await db.select({ id: stops.id, name: stops.name })
+      .from(stops)
+      .where(or(like(stops.name, `%${from}%`), like(stops.type, `%${from}%`)));
     
-    // First, find stops that match 'from' and 'to'
-    const fromStops = await db.query.stops.findMany({
-      where: like(stops.name, `%${from}%`),
-      columns: { id: true, name: true }
-    });
-    
-    const toStops = await db.query.stops.findMany({
-      where: like(stops.name, `%${to}%`),
-      columns: { id: true, name: true }
-    });
+    const toStops = await db.select({ id: stops.id, name: stops.name })
+      .from(stops)
+      .where(or(like(stops.name, `%${to}%`), like(stops.type, `%${to}%`)));
 
     if (fromStops.length === 0 || toStops.length === 0) {
       return { success: false, data: [], message: "Titik jemput atau tujuan tidak ditemukan." }
@@ -27,44 +22,50 @@ export async function searchRoutes(from: string, to: string) {
     const fromStopIds = fromStops.map(s => s.id);
     const toStopIds = toStops.map(s => s.id);
 
-    // Find routes connecting these stops
-    // Note: in a real complex system, we'd use a graph algorithm, but here routes are direct or predefined.
-    const directRoutes = await db.query.routes.findMany({
-      where: (routes, { inArray, and }) => and(
+    // Helper to enrich routes with relations
+    const enrichRoutes = async (routeRows: typeof routes.$inferSelect[]) => {
+      return await Promise.all(routeRows.map(async (route) => {
+        const [transportation] = route.transportationId
+          ? await db.select().from(transportations).where(eq(transportations.id, route.transportationId))
+          : [null];
+        const [originStop] = route.originStopId
+          ? await db.select().from(stops).where(eq(stops.id, route.originStopId))
+          : [null];
+        const [destinationStop] = route.destinationStopId
+          ? await db.select().from(stops).where(eq(stops.id, route.destinationStopId))
+          : [null];
+        const routeFares = await db.select().from(fares).where(eq(fares.routeId, route.id));
+        const routeSchedules = await db.select().from(schedules).where(eq(schedules.routeId, route.id));
+        return { ...route, transportation, originStop, destinationStop, fares: routeFares, schedules: routeSchedules };
+      }));
+    };
+
+    // Find direct routes
+    const directRouteRows = await db.select().from(routes).where(
+      and(
+        isNotNull(routes.originStopId),
+        isNotNull(routes.destinationStopId),
         inArray(routes.originStopId, fromStopIds),
         inArray(routes.destinationStopId, toStopIds)
-      ),
-      with: {
-        originStop: true,
-        destinationStop: true,
-        transportation: true,
-        fares: true,
-        schedules: true
-      }
-    });
+      )
+    );
 
-    // If no direct routes, maybe just return any routes that contain either one just as a fallback
-    if (directRoutes.length > 0) {
-      return { success: true, data: directRoutes, message: "Rute ditemukan." }
-    } else {
-      // Fallback: finding routes that just go to the destination
-      const fallbackRoutes = await db.query.routes.findMany({
-         where: (routes, { inArray }) => inArray(routes.destinationStopId, toStopIds),
-         with: {
-            originStop: true,
-            destinationStop: true,
-            transportation: true,
-            fares: true,
-            schedules: true
-         },
-         limit: 5
-      });
-      return { 
-        success: true, 
-        data: fallbackRoutes, 
-        message: "Tidak ada rute langsung. Menampilkan alternatif rute menuju tujuan Anda." 
-      }
+    if (directRouteRows.length > 0) {
+      const enriched = await enrichRoutes(directRouteRows);
+      return { success: true, data: enriched, message: "Rute ditemukan." };
     }
+
+    // Fallback: routes that go to destination
+    const fallbackRows = await db.select().from(routes)
+      .where(and(isNotNull(routes.destinationStopId), inArray(routes.destinationStopId, toStopIds)))
+      .limit(5);
+
+    const enriched = await enrichRoutes(fallbackRows);
+    return {
+      success: true,
+      data: enriched,
+      message: "Tidak ada rute langsung. Menampilkan alternatif rute menuju tujuan Anda."
+    };
 
   } catch (error: any) {
     console.error("Error searching routes:", error);
@@ -77,9 +78,9 @@ export async function getStopsForAutocomplete(query: string) {
   
   try {
     const matchedStops = await db.query.stops.findMany({
-      where: like(stops.name, `%${query}%`),
+      where: or(like(stops.name, `%${query}%`), like(stops.type, `%${query}%`)),
       columns: { name: true },
-      limit: 5,
+      limit: 8,
     });
     const uniqueNames = Array.from(new Set(matchedStops.map((s) => s.name)));
     return uniqueNames;

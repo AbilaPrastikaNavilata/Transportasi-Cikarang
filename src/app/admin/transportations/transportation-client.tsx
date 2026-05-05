@@ -20,7 +20,8 @@ import {
   Filter,
   Edit,
   Trash2,
-  Loader2
+  Loader2,
+  AlertTriangle
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { deleteTransportation, createTransportation, updateTransportation } from "./actions"
@@ -43,6 +44,7 @@ export function TransportationClient({ initialData }: { initialData: any[] }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
   const [formData, setFormData] = useState({ name: "", type: "Angkot", capacity: "", facilities: "" })
+  const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; id: number | null; name: string }>({ open: false, id: null, name: "" })
   const router = useRouter()
 
   const filteredData = initialData.filter(item => 
@@ -50,10 +52,11 @@ export function TransportationClient({ initialData }: { initialData: any[] }) {
     item.type.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this transportation?")) return;
-    setIsDeleting(id)
-    await deleteTransportation(id)
+  const handleDelete = async () => {
+    if (!deleteConfirm.id) return;
+    setIsDeleting(deleteConfirm.id)
+    setDeleteConfirm({ open: false, id: null, name: "" })
+    await deleteTransportation(deleteConfirm.id)
     setIsDeleting(null)
     router.refresh()
   }
@@ -196,7 +199,7 @@ export function TransportationClient({ initialData }: { initialData: any[] }) {
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow className="border-slate-100 hover:bg-slate-50">
-                <TableHead className="font-semibold text-slate-600">ID / Name</TableHead>
+                <TableHead className="font-semibold text-slate-600">Name</TableHead>
                 <TableHead className="font-semibold text-slate-600">Type</TableHead>
                 <TableHead className="font-semibold text-slate-600">Capacity</TableHead>
                 <TableHead className="font-semibold text-slate-600">Facilities</TableHead>
@@ -220,7 +223,6 @@ export function TransportationClient({ initialData }: { initialData: any[] }) {
                       </div>
                       <div className="flex flex-col">
                         <span className="font-semibold text-[#0F172A]">{item.name}</span>
-                        <span className="text-xs text-slate-500">ID: {item.id}</span>
                       </div>
                     </div>
                   </TableCell>
@@ -253,7 +255,7 @@ export function TransportationClient({ initialData }: { initialData: any[] }) {
                         variant="ghost" 
                         size="icon" 
                         className="h-8 w-8 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => setDeleteConfirm({ open: true, id: item.id, name: item.name })}
                         disabled={isDeleting === item.id}
                       >
                         {isDeleting === item.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
@@ -266,6 +268,30 @@ export function TransportationClient({ initialData }: { initialData: any[] }) {
           </Table>
         </div>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteConfirm.open} onOpenChange={(open) => !open && setDeleteConfirm({ open: false, id: null, name: "" })}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="mx-auto w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mb-3">
+              <AlertTriangle className="h-7 w-7 text-red-600" />
+            </div>
+            <DialogTitle className="text-center text-xl font-bold text-[#0F172A]">Hapus Armada?</DialogTitle>
+            <DialogDescription className="text-center text-slate-500">
+              Anda akan menghapus <span className="font-semibold text-[#0F172A]">&ldquo;{deleteConfirm.name}&rdquo;</span>. Tindakan ini tidak dapat dibatalkan.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex sm:justify-center gap-3 mt-2">
+            <Button variant="outline" onClick={() => setDeleteConfirm({ open: false, id: null, name: "" })} className="rounded-xl flex-1">
+              Batal
+            </Button>
+            <Button onClick={handleDelete} className="rounded-xl flex-1 bg-red-600 hover:bg-red-700 text-white">
+              <Trash2 className="h-4 w-4 mr-2" />
+              Ya, Hapus
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -30,8 +30,13 @@ export default function AdminLayout({
 
   const handleLogout = async () => {
     setIsLogoutModalOpen(false)
-    await signOut()
-    router.push("/login")
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = "/login"
+        }
+      }
+    })
   }
 
   const handleSearch = (e: React.FormEvent) => {
