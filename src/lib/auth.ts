@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { admin } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db"; // We will alias this or use relative path. Let's use relative for now just to be safe.
 import * as schema from "@/db/schema";
@@ -24,5 +25,8 @@ export const auth = betterAuth({
                 defaultValue: "customer"
             }
         }
-    }
+    },
+    plugins: [
+        admin()
+    ]
 });

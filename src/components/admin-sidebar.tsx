@@ -1,6 +1,6 @@
 "use client"
 
-import { Bus, MapPin, Route, CalendarClock, DollarSign, LayoutDashboard, Settings, FileText } from "lucide-react"
+import { Bus, MapPin, Route, CalendarClock, DollarSign, LayoutDashboard, Settings, FileText, UserCog } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { Logo } from "@/components/logo"
 
@@ -48,6 +48,11 @@ const items = [
     title: "Fares",
     url: "/admin/fares",
     icon: DollarSign,
+  },
+  {
+    title: "Pengguna",
+    url: "/admin/users",
+    icon: UserCog,
   },
 ]
 

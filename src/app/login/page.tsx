@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Bus, Loader2, Lock, Mail, ArrowRight, ArrowLeft } from "lucide-react"
+import { Bus, Loader2, Lock, Mail, ArrowRight, ArrowLeft, MessageCircle } from "lucide-react"
 import { signIn } from "@/lib/auth-client"
 import { motion } from "framer-motion"
 import { Logo } from "@/components/logo"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -156,9 +157,22 @@ export default function LoginPage() {
                     Ingat saya
                   </label>
                 </div>
-                <Link href="#" className="text-sm font-semibold text-[#0053db] hover:underline">
-                  Lupa password?
-                </Link>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button type="button" className="text-sm font-semibold text-[#0053db] hover:underline">
+                      Lupa password?
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Lupa Password?</DialogTitle>
+                      <DialogDescription>
+                        Untuk alasan keamanan, reset password hanya dapat dilakukan oleh Admin. 
+                        Silakan hubungi Admin untuk mereset password Anda.
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               <Button 

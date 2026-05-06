@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import { db } from "@/db"
 import { transportations, stops, routes } from "@/db/schema"
 import { like, or } from "drizzle-orm"
